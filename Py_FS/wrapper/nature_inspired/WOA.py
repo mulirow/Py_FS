@@ -152,7 +152,6 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     fig, axes = Conv_plot(convergence_curve)
     if(save_conv_graph):
         plt.savefig('convergence_graph_'+ short_name + '.jpg')
-    plt.show()
 
     # update attributes of solution
     solution.best_agent = Leader_agent
