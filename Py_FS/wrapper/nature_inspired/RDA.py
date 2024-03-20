@@ -3,7 +3,7 @@
 Programmer: Bitanu Chatterjee
 Date of Development: 14/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
-"Fathollahi-Fard, Amir Mohammad, Mostafa Hajiaghaei-Keshteli, and Reza Tavakkoli-Moghaddam. 
+"Fathollahi-Fard, Amir Mohammad, Mostafa Hajiaghaei-Keshteli, and Reza Tavakkoli-Moghaddam.
 'Red deer algorithm (RDA): a new nature-inspired meta-heuristic.''" Soft Computing (2020): 1-29."
 
 """
@@ -28,18 +28,18 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     #   num_agents: number of red deers                                           #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
-    #   train_label: class labels for the training samples                        #                
+    #   train_label: class labels for the training samples                        #
     #   obj_function: the function to maximize while doing feature selection      #
     #   trans_function_shape: shape of the transfer function used                 #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
-    
+
     # Number of agents must be at least 8
     if num_agents < 8:
         print("[Error!] The value of the parameter num_agents must be at least 8", file=sys.stderr)
         sys.exit(1)
-        
+
     short_name = 'RDA'
     agent_name = 'RedDeer'
     train_data, train_label = np.array(train_data), np.array(train_label)
@@ -76,7 +76,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     solution.max_iter = max_iter
     solution.num_features = num_features
     solution.obj_function = obj_function
-    
+
     # initializing parameters
     UB = 5 # Upper bound
     LB = -5 # Lower bound
@@ -92,13 +92,13 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
         print('\n================================================================================')
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
-        
+
         deer, fitness = sort_agents(deer, obj, data)
         num_males = int(0.25 * num_agents)
         num_hinds = num_agents - num_males
         males = deer[:num_males,:]
         hinds = deer[num_males:,:]
-        
+
         # roaring of male deer
         for i in range(num_males):
             r1 = np.random.random() # r1 is a random number in [0, 1]
@@ -109,27 +109,27 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                 new_male += r1 * (((UB - LB) * r2) + LB)
             else:
                 new_male -= r1 * (((UB - LB) * r2) + LB)
-                 
+
             # apply transformation function on the new male
             for j in range(num_features):
                 trans_value = trans_function(new_male[j])
-                if (np.random.random() < trans_value): 
+                if (np.random.random() < trans_value):
                     new_male[j] = 1
                 else:
                     new_male[j] = 0
-                    
+
             if obj_function(new_male, data.train_X, data.val_X, data.train_Y, data.val_Y) < obj_function(males[i], data.train_X, data.val_X, data.train_Y, data.val_Y):
                 males[i] = new_male
-        
-        
+
+
         # selection of male commanders and stags
         num_coms = int(num_males * gamma) # Eq. (4)
         num_stags = num_males - num_coms # Eq. (5)
 
         coms = males[:num_coms,:]
         stags = males[num_coms:,:]
-        
-        # fight between male commanders and stags       
+
+        # fight between male commanders and stags
         for i in range(num_coms):
             chosen_com = coms[i].copy()
             chosen_stag = random.choice(stags)
@@ -137,29 +137,29 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
             r2 = np.random.random()
             new_male_1 = (chosen_com + chosen_stag) / 2 + r1 * (((UB - LB) * r2) + LB) # Eq. (6)
             new_male_2 = (chosen_com + chosen_stag) / 2 - r1 * (((UB - LB) * r2) + LB) # Eq. (7)
-            
+
             # apply transformation function on new_male_1
             for j in range(num_features):
                 trans_value = trans_function(new_male_1[j])
-                if (np.random.random() < trans_value): 
+                if (np.random.random() < trans_value):
                     new_male_1[j] = 1
                 else:
                     new_male_1[j] = 0
-             
+
             # apply transformation function on new_male_2
             for j in range(num_features):
                 trans_value = trans_function(new_male_2[j])
-                if (np.random.random() < trans_value): 
+                if (np.random.random() < trans_value):
                     new_male_2[j] = 1
                 else:
                     new_male_2[j] = 0
-                    
+
             fitness = np.zeros(4)
             fitness[0] = obj_function(chosen_com, data.train_X, data.val_X, data.train_Y, data.val_Y)
             fitness[1] = obj_function(chosen_stag, data.train_X, data.val_X, data.train_Y, data.val_Y)
             fitness[2] = obj_function(new_male_1, data.train_X, data.val_X, data.train_Y, data.val_Y)
             fitness[3] = obj_function(new_male_2, data.train_X, data.val_X, data.train_Y, data.val_Y)
-            
+
             bestfit = np.max(fitness)
             if fitness[0] < fitness[1] and fitness[1] == bestfit:
                 coms[i] = chosen_stag.copy()
@@ -184,7 +184,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
             for j in range(harem_size):
                 harem[i][j] = hinds[itr]
                 itr += 1
-        
+
         # mating of commander with hinds in his harem
         num_harem_mate = [int(x * alpha) for x in num_harems] # Eq. (11)
         population_pool = list(deer)
@@ -193,20 +193,20 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
             for j in range(num_harem_mate[i]):
                 r = np.random.random() # r is a random number in [0, 1]
                 offspring = (coms[i] + harem[i][j]) / 2 + (UB - LB) * r # Eq. (12)
-                
+
                 # apply transformation function on offspring
                 for j in range(num_features):
                     trans_value = trans_function(offspring[j])
-                    if (np.random.random() < trans_value): 
+                    if (np.random.random() < trans_value):
                         offspring[j] = 1
                     else:
                         offspring[j] = 0
                 population_pool.append(list(offspring))
-                
+
                 # if number of commanders is greater than 1, inter-harem mating takes place
                 if num_coms > 1:
                     # mating of commander with hinds in another harem
-                    k = i 
+                    k = i
                     while k == i:
                         k = random.choice(range(num_coms))
 
@@ -215,16 +215,16 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                     np.random.shuffle(harem[k])
                     for j in range(num_mate):
                         r = np.random.random() # r is a random number in [0, 1]
-                        offspring = (coms[i] + harem[k][j]) / 2 + (UB - LB) * r 
+                        offspring = (coms[i] + harem[k][j]) / 2 + (UB - LB) * r
                         # apply transformation function on offspring
                         for j in range(num_features):
                             trans_value = trans_function(offspring[j])
-                            if (np.random.random() < trans_value): 
+                            if (np.random.random() < trans_value):
                                 offspring[j] = 1
                             else:
                                 offspring[j] = 0
                         population_pool.append(list(offspring))
-        
+
         # mating of stag with nearest hind
         for stag in stags:
             dist = np.zeros(num_hinds)
@@ -236,26 +236,26 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                 if(distance == min_dist):
                     r = np.random.random() # r is a random number in [0, 1]
                     offspring = (stag + hinds[i])/2 + (UB - LB) * r
-                    
+
                     # apply transformation function on offspring
                     for j in range(num_features):
                         trans_value = trans_function(offspring[j])
-                        if (np.random.random() < trans_value): 
+                        if (np.random.random() < trans_value):
                             offspring[j] = 1
                         else:
                             offspring[j] = 0
                     population_pool.append(list(offspring))
-                    
+
                     break
-        
+
         # selection of the next generation
-        population_pool = np.array(population_pool)            
+        population_pool = np.array(population_pool)
         population_pool, fitness = sort_agents(population_pool, obj, data)
         maximum = sum([f for f in fitness])
         selection_probs = [f/maximum for f in fitness]
-        indices = np.random.choice(len(population_pool), size=num_agents, replace=True, p=selection_probs)          
+        indices = np.random.choice(len(population_pool), size=num_agents, replace=True, p=selection_probs)
         deer = population_pool[indices]
-        
+
         # update final information
         deer, fitness = sort_agents(deer, obj, data)
         display(deer, fitness, agent_name)
@@ -280,7 +280,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     # stop timer
     end_time = time.time()
     exec_time = end_time - start_time
-    
+
     # plot convergence graph
     fig, axes = Conv_plot(convergence_curve)
     if(save_conv_graph):

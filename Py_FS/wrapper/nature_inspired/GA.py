@@ -22,7 +22,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     #   num_agents: number of chromosomes                                         #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
-    #   train_label: class labels for the training samples                        #                
+    #   train_label: class labels for the training samples                        #
     #   obj_function: the function to maximize while doing feature selection      #
     #   prob_cross: probability of crossover                                      #
     #   prob_mut: probability of mutation                                         #
@@ -83,7 +83,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
 
         # perform crossover, mutation and replacement
         chromosomes, fitness = cross_mut(chromosomes, fitness, obj, data, prob_cross, cross_limit, prob_mut)
-        
+
         # update final information
         chromosomes, fitness = sort_agents(chromosomes, obj, data, fitness)
         display(chromosomes, fitness, agent_name)
@@ -151,7 +151,7 @@ def mutation(chromosome, prob_mut):
     for i in range(num_features):
         if(np.random.rand()<prob_mut):
             mut_chromosome[i] = 1-mut_chromosome[i]
-    
+
     return mut_chromosome
 
 
@@ -190,7 +190,7 @@ def cross_mut(chromosomes, fitness, obj, data, prob_cross, cross_limit, prob_mut
                         break
 
             count = count+1
-            
+
 
         else:
             print('Crossover failed....')

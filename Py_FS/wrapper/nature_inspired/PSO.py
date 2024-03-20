@@ -3,8 +3,8 @@
 Programmer: Ali Hussain Khan
 Date of Development: 15/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
-"Khanesar, M. A., Teshnehlab, M., & Shoorehdeli, M. A. (2007, June). 
-A novel binary particle swarm optimization. 
+"Khanesar, M. A., Teshnehlab, M., & Shoorehdeli, M. A. (2007, June).
+A novel binary particle swarm optimization.
 In 2007 Mediterranean conference on control & automation (pp. 1-6). IEEE."
 
 """
@@ -20,20 +20,20 @@ from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 
 
 def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_func_shape='s', save_conv_graph=False):
-    
+
     # Particle Swarm Optimizer
     ############################### Parameters ####################################
     #                                                                             #
     #   num_agents: number of particles                                           #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
-    #   train_label: class labels for the training samples                        #                
+    #   train_label: class labels for the training samples                        #
     #   obj_function: the function to maximize while doing feature selection      #
     #   trans_function_shape: shape of the transfer function used                 #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
-    
+
     short_name = 'PSO'
     agent_name = 'Particle'
     train_data, train_label = np.array(train_data), np.array(train_label)
@@ -80,19 +80,19 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     # initialize global and local best particles
     globalBestParticle = [0 for i in range(num_features)]
     globalBestFitness = float("-inf")
-    localBestParticle = [ [ 0 for i in range(num_features) ] for j in range(num_agents) ] 
+    localBestParticle = [ [ 0 for i in range(num_features) ] for j in range(num_agents) ]
     localBestFitness = [float("-inf") for i in range(num_agents) ]
-    weight = 1.0 
+    weight = 1.0
     velocity = [ [ 0.0 for i in range(num_features) ] for j in range(num_agents) ]
-    
+
     for iter_no in range(max_iter):
         print('\n================================================================================')
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
-        
+
         # update weight
         weight = 1.0 - (iter_no / max_iter)
-        
+
         # update the velocity
         for i in range(num_agents):
             for j in range(num_features):
@@ -100,21 +100,21 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                 r1, r2 = np.random.random(2)
                 velocity[i][j] = velocity[i][j] + (r1 * (localBestParticle[i][j] - particles[i][j]))
                 velocity[i][j] = velocity[i][j] + (r2 * (globalBestParticle[j] - particles[i][j]))
-       
+
         # updating position of particles
         for i in range(num_agents):
             for j in range(num_features):
                 trans_value = trans_function(velocity[i][j])
-                if (np.random.random() < trans_value): 
+                if (np.random.random() < trans_value):
                     particles[i][j] = 1
                 else:
                     particles[i][j] = 0
-                 
+
         # updating fitness of particles
         particles, fitness = sort_agents(particles, obj, data)
         display(particles, fitness, agent_name)
-        
-        
+
+
         # updating the global best and local best particles
         for i in range(num_agents):
             if fitness[i]>localBestFitness[i]:
@@ -168,7 +168,6 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 
 
 if __name__ == '__main__':
-    
     data = datasets.load_digits()
     PSO(20, 100, data.data, data.target, save_conv_graph=True)
 

@@ -3,7 +3,7 @@
 Programmer: Ritam Guha
 Date of Development: 8/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
-"Mafarja, M., & Mirjalili, S. (2018). Whale optimization approaches for wrapper feature selection. 
+"Mafarja, M., & Mirjalili, S. (2018). Whale optimization approaches for wrapper feature selection.
 Applied Soft Computing, 62, 441-453."
 
 """
@@ -27,13 +27,13 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     #   num_agents: number of whales                                              #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
-    #   train_label: class labels for the training samples                        #                
+    #   train_label: class labels for the training samples                        #
     #   obj_function: the function to maximize while doing feature selection      #
     #   trans_function_shape: shape of the transfer function used                 #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
-    
+
     short_name = 'WOA'
     agent_name = 'Whale'
     train_data, train_label = np.array(train_data), np.array(train_label)
@@ -60,7 +60,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     convergence_curve = {}
     convergence_curve['fitness'] = np.zeros(max_iter)
 
-    # format the data 
+    # format the data
     data = Data()
     val_size = float(input('Enter the percentage of data wanted for valdiation [0, 100]: '))/100
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=val_size)
@@ -93,20 +93,20 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
             C = 2 * r  # Eq. (4)
             l = -1 + (np.random.random() * 2)   # l is a random number in [-1, 1]
             p = np.random.random()  # p is a random number in [0, 1]
-            b = 1  # defines shape of the spiral               
-            
+            b = 1  # defines shape of the spiral
+
             if p<0.5:
                 # Shrinking Encircling mechanism
                 if abs(A)>=1:
                     rand_agent_index = np.random.randint(0, num_agents)
                     rand_agent = whales[rand_agent_index, :]
-                    mod_dist_rand_agent = abs(C * rand_agent - whales[i,:]) 
+                    mod_dist_rand_agent = abs(C * rand_agent - whales[i,:])
                     whales[i,:] = rand_agent - (A * mod_dist_rand_agent)   # Eq. (9)
-                    
+
                 else:
-                    mod_dist_Leader = abs(C * Leader_agent - whales[i,:]) 
+                    mod_dist_Leader = abs(C * Leader_agent - whales[i,:])
                     whales[i,:] = Leader_agent - (A * mod_dist_Leader)  # Eq. (2)
-                
+
             else:
                 # Spiral-Shaped Attack mechanism
                 dist_Leader = abs(Leader_agent - whales[i,:])
@@ -115,7 +115,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
             # Apply transformation function on the updated whale
             for j in range(num_features):
                 trans_value = trans_function(whales[i,j])
-                if (np.random.random() < trans_value): 
+                if (np.random.random() < trans_value):
                     whales[i,j] = 1
                 else:
                     whales[i,j] = 0
@@ -147,7 +147,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     # stop timer
     end_time = time.time()
     exec_time = end_time - start_time
-    
+
     # plot convergence graph
     fig, axes = Conv_plot(convergence_curve)
     if(save_conv_graph):
