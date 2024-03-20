@@ -19,7 +19,7 @@ from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize,
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 
 
-def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', save_conv_graph=False):
+def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', save_conv_graph=False, weight_acc=0.9, val_size=0.2):
 
     # Whale Optimization Algorithm
     ############################### Parameters ####################################
@@ -41,10 +41,6 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     cross_limit = 5
     trans_function = get_trans_function(trans_function_shape)
 
-    # setting up the objectives
-    weight_acc = None
-    if(obj_function==compute_fitness):
-        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
     obj = (obj_function, weight_acc)
     compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
 
@@ -62,7 +58,6 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 
     # format the data
     data = Data()
-    val_size = float(input('Enter the percentage of data wanted for valdiation [0, 100]: '))/100
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=val_size)
 
     # create a solution object

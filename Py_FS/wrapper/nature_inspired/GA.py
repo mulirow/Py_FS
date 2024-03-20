@@ -14,7 +14,7 @@ from sklearn import datasets
 from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 
 
-def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, prob_cross=0.4, prob_mut=0.3, save_conv_graph=False, seed=0):
+def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, prob_cross=0.4, prob_mut=0.3, save_conv_graph=False, weight_acc=0.9, val_size=0.2):
 
     # Genetic Algorithm
     ############################### Parameters ####################################
@@ -35,12 +35,6 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     cross_limit = 5
-    np.random.seed(seed)
-
-    # setting up the objectives
-    weight_acc = None
-    if(obj_function==compute_fitness):
-        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
 
     obj = (obj_function, weight_acc)
     compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
@@ -59,7 +53,6 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
 
     # initialize data class
     data = Data()
-    val_size = float(input('Enter the percentage of data wanted for valdiation [0, 100]: '))/100
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=val_size)
 
     # create a solution object

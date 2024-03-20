@@ -19,7 +19,7 @@ from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize,
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 
 
-def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_func_shape='s', save_conv_graph=False):
+def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_func_shape='s', save_conv_graph=False, weight_acc=0.9, val_size=0.2):
 
     # Particle Swarm Optimizer
     ############################### Parameters ####################################
@@ -39,11 +39,7 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_func_shape)
-    
-    # setting up the objectives
-    weight_acc = None
-    if(obj_function==compute_fitness):
-        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+
     obj = (obj_function, weight_acc)
     compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
 
@@ -61,7 +57,6 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 
     # initialize data class
     data = Data()
-    val_size = float(input('Enter the percentage of data wanted for valdiation [0, 100]: '))/100
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=val_size)
 
     # create a solution object
