@@ -20,7 +20,7 @@ from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize,
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 
 
-def RDA_Mod(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', save_conv_graph=False, weight_acc=0.9, val_size=0.2):
+def RDA_Mod_1(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', save_conv_graph=False, weight_acc=0.9, val_size=0.2):
 
     # Red Deer Algorithm
     ############################### Parameters ####################################
@@ -187,7 +187,8 @@ def RDA_Mod(num_agents, max_iter, train_data, train_label, obj_function=compute_
             random.shuffle(harem[i])
             for j in range(num_harem_mate[i]):
                 r = np.random.random() # r is a random number in [0, 1]
-                offspring = (coms[i] + harem[i][j]) / 2 + (UB - LB) * r # Eq. (12)
+                avg = (coms[i] + harem[i][j]) / 2
+                offspring = avg + (UB - avg) * r # Eq. (12)
 
                 # apply transformation function on offspring
                 for j in range(num_features):
@@ -210,7 +211,8 @@ def RDA_Mod(num_agents, max_iter, train_data, train_label, obj_function=compute_
                     np.random.shuffle(harem[k])
                     for j in range(num_mate):
                         r = np.random.random() # r is a random number in [0, 1]
-                        offspring = (coms[i] + harem[k][j]) / 2 + (UB - LB) * r
+                        avg = (coms[i] + harem[k][j]) / 2
+                        offspring = avg + (UB - avg) * r
                         # apply transformation function on offspring
                         for j in range(num_features):
                             trans_value = trans_function(offspring[j])
@@ -230,7 +232,8 @@ def RDA_Mod(num_agents, max_iter, train_data, train_label, obj_function=compute_
                 distance = math.sqrt(np.sum((stag-hinds[i])*(stag-hinds[i]))) # Eq. (14)
                 if(distance == min_dist):
                     r = np.random.random() # r is a random number in [0, 1]
-                    offspring = (stag + hinds[i])/2 + (UB - LB) * r
+                    avg = (stag + hinds[i]) / 2
+                    offspring = avg + (UB - avg) * r
 
                     # apply transformation function on offspring
                     for j in range(num_features):
@@ -300,5 +303,5 @@ def RDA_Mod(num_agents, max_iter, train_data, train_label, obj_function=compute_
 
 if __name__ == '__main__':
     data = datasets.load_digits()
-    RDA_Mod(20, 100, data.data, data.target, save_conv_graph=True)
+    RDA_Mod_1(20, 100, data.data, data.target, save_conv_graph=True)
 ############# for testing purpose ################
