@@ -1,4 +1,4 @@
-from Py_FS.wrapper.nature_inspired import GA, PSO, WOA, RDA, RDA_Mod_1, RDA_Mod_2
+from Py_FS.wrapper.nature_inspired import GA, PSO, WOA, RDA, RDA_Mod_1, RDA_Mod_2, RDA_Mod_3
 from Py_FS.datasets import get_dataset
 import numpy as np
 import pandas as pd
